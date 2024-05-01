@@ -60,8 +60,11 @@ class StudentSystem:
         """
         Method to display the list of students in the system
         """
-        for student in self._students:
-            student.display()
+        if not self._students:
+            print("No students in the system.")
+        else:
+            for student in self._students:
+                student.display()
 
     def search_student(self, id_number):
         """
@@ -89,9 +92,9 @@ def main():
         print("5. Search student")
         print("6. Exit")
 
-        choice = int(input("Enter your choice: "))
+        choice = input("Enter your choice: ")
 
-        if choice == 1:
+        if choice == "1":
             name = input("Enter name: ")
             gender = input("Enter gender: ")
             id_number = input("Enter ID number: ")
@@ -102,30 +105,37 @@ def main():
             system.add_student(student)
             print("Student added successfully.")
 
-        elif choice == 2:
+        elif choice == "2":
             id_number = input("Enter ID number of student to delete: ")
             if system.delete_student(id_number):
                 print("Student deleted successfully.")
             else:
                 print("Student not found.")
 
-        elif choice == 3:
+        elif choice == "3":
             id_number = input("Enter ID number of student to modify: ")
             attribute = input("Enter attribute to modify (name/gender/blood_group/mobile_number/email): ")
+
+            # Validating attribute input
+            valid_attributes = ["name", "gender", "blood_group", "mobile_number", "email"]
+            if attribute.lower() not in valid_attributes:
+                print("Invalid attribute. Please enter a valid attribute.")
+                continue
+
             new_value = input("Enter new value: ")
             if system.modify_student(id_number, **{attribute: new_value}):
                 print("Student modified successfully.")
             else:
                 print("Student not found.")
 
-        elif choice == 4:
+        elif choice == "4":
             system.display_students()
 
-        elif choice == 5:
+        elif choice == "5":
             id_number = input("Enter ID number of student to search: ")
             system.search_student(id_number)
 
-        elif choice == 6:
+        elif choice == "6":
             print("Exiting program.")
             break
 
