@@ -1,8 +1,7 @@
+import re
+
 class Student:
     def __init__(self, name, gender, id_number, blood_group, mobile_number, email):
-        """
-        Constructor for the Student class
-        """
         self._name = name
         self._gender = gender
         self._id_number = id_number
@@ -11,9 +10,6 @@ class Student:
         self._email = email
 
     def display(self):
-        """
-        Method to display student information
-        """
         print("Name:", self._name)
         print("Gender:", self._gender)
         print("ID Number:", self._id_number)
@@ -21,45 +17,49 @@ class Student:
         print("Mobile Number:", self._mobile_number)
         print("Email:", self._email)
 
+    def update_info(self, attribute, value):
+        if attribute == 'name':
+            self._name = value
+        elif attribute == 'gender':
+            self._gender = value
+        elif attribute == 'blood_group':
+            self._blood_group = value
+        elif attribute == 'mobile_number':
+            if re.match(r'^\d{10}$', value):
+                self._mobile_number = value
+            else:
+                print("Invalid mobile number format.")
+        elif attribute == 'email':
+            if re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', value):
+                self._email = value
+            else:
+                print("Invalid email format.")
+        else:
+            print("Invalid attribute.")
+
 
 class StudentSystem:
     def __init__(self):
-        """
-        Constructor for the StudentSystem class
-        """
         self._students = []
 
     def add_student(self, student):
-        """
-        Method to add a student to the system
-        """
         self._students.append(student)
 
     def delete_student(self, id_number):
-        """
-        Method to delete a student from the system
-        """
         for student in self._students:
             if student._id_number == id_number:
                 self._students.remove(student)
                 return True
         return False
 
-    def modify_student(self, id_number, **kwargs):
-        """
-        Method to modify a student's information
-        """
+    def modify_student(self, id_number, attribute, value):
         for student in self._students:
             if student._id_number == id_number:
-                for key, value in kwargs.items():
-                    setattr(student, "_" + key, value)
+                student.update_info(attribute, value)
                 return True
         return False
 
     def display_students(self):
-        """
-        Method to display the list of students in the system
-        """
         if not self._students:
             print("No students in the system.")
         else:
@@ -67,9 +67,6 @@ class StudentSystem:
                 student.display()
 
     def search_student(self, id_number):
-        """
-        Method to search for a student by ID number and display their information
-        """
         for student in self._students:
             if student._id_number == id_number:
                 student.display()
@@ -78,9 +75,6 @@ class StudentSystem:
 
 
 def main():
-    """
-    Main function to run the Student Information System
-    """
     system = StudentSystem()
 
     while True:
@@ -88,9 +82,8 @@ def main():
         print("1. Add student")
         print("2. Delete student")
         print("3. Modify student")
-        print("4. Display student list")
-        print("5. Search student")
-        print("6. Exit")
+        print("4. Search student")
+        print("5. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -115,27 +108,17 @@ def main():
         elif choice == "3":
             id_number = input("Enter ID number of student to modify: ")
             attribute = input("Enter attribute to modify (name/gender/blood_group/mobile_number/email): ")
-
-            # Validating attribute input
-            valid_attributes = ["name", "gender", "blood_group", "mobile_number", "email"]
-            if attribute.lower() not in valid_attributes:
-                print("Invalid attribute. Please enter a valid attribute.")
-                continue
-
             new_value = input("Enter new value: ")
-            if system.modify_student(id_number, **{attribute: new_value}):
+            if system.modify_student(id_number, attribute, new_value):
                 print("Student modified successfully.")
             else:
                 print("Student not found.")
 
         elif choice == "4":
-            system.display_students()
-
-        elif choice == "5":
             id_number = input("Enter ID number of student to search: ")
             system.search_student(id_number)
 
-        elif choice == "6":
+        elif choice == "5":
             print("Exiting program.")
             break
 
