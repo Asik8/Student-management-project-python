@@ -25,7 +25,7 @@ class Student:
         elif attribute == 'blood_group':
             self._blood_group = value
         elif attribute == 'mobile_number':
-            if re.match(r'^\d{10}$', value):
+            if re.match(r'^\d{11}$', value):
                 self._mobile_number = value
             else:
                 print("Invalid mobile number format.")
@@ -58,13 +58,6 @@ class StudentSystem:
                 student.update_info(attribute, value)
                 return True
         return False
-
-    def display_students(self):
-        if not self._students:
-            print("No students in the system.")
-        else:
-            for student in self._students:
-                student.display()
 
     def search_student(self, id_number):
         for student in self._students:
